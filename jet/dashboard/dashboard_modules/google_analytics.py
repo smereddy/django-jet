@@ -85,8 +85,7 @@ class GoogleAnalyticsClient:
 
     def get_oauth_authorize_url(self, state=''):
         self.FLOW.params['state'] = state
-        authorize_url = self.FLOW.step1_get_authorize_url()
-        return authorize_url
+        return self.FLOW.step1_get_authorize_url()
 
     def set_credential(self, credential):
         self.credential = credential
@@ -289,23 +288,24 @@ class GoogleAnalyticsBase(DashboardModule):
             return True
 
     def api_ga(self, group=None):
-        if self.counter_attached():
-            date1 = datetime.datetime.now() - datetime.timedelta(days=self.period)
-            date2 = datetime.datetime.now()
+        if not self.counter_attached():
+            return
+        date1 = datetime.datetime.now() - datetime.timedelta(days=self.period)
+        date2 = datetime.datetime.now()
 
-            try:
-                client = GoogleAnalyticsClient(self.storage)
-                result, exception = client.api_ga(self.counter, date1, date2, group)
+        try:
+            client = GoogleAnalyticsClient(self.storage)
+            result, exception = client.api_ga(self.counter, date1, date2, group)
 
-                if exception is not None:
-                        raise exception
+            if exception is not None:
+                    raise exception
 
-                return result
-            except Exception as e:
-                error = _('API request failed.')
-                if isinstance(e, AccessTokenRefreshError):
-                    error += _(' Try to <a href="%s">revoke and grant access</a> again') % reverse('jet-dashboard:update_module', kwargs={'pk': self.model.pk})
-                self.error = mark_safe(error)
+            return result
+        except Exception as e:
+            error = _('API request failed.')
+            if isinstance(e, AccessTokenRefreshError):
+                error += _(' Try to <a href="%s">revoke and grant access</a> again') % reverse('jet-dashboard:update_module', kwargs={'pk': self.model.pk})
+            self.error = mark_safe(error)
 
 
 class GoogleAnalyticsVisitorsTotals(GoogleAnalyticsBase):

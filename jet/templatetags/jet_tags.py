@@ -113,12 +113,16 @@ def jet_select2_lookups(field):
 
 @assignment_tag(takes_context=True)
 def jet_get_current_theme(context):
-    if 'request' in context and 'JET_THEME' in context['request'].COOKIES:
+    if (
+        'request' in context
+        and 'JET_THEME' in context['request'].COOKIES
+        and isinstance(settings.JET_THEMES, list)
+        and len(settings.JET_THEMES) > 0
+    ):
         theme = context['request'].COOKIES['JET_THEME']
-        if isinstance(settings.JET_THEMES, list) and len(settings.JET_THEMES) > 0:
-            for conf_theme in settings.JET_THEMES:
-                if isinstance(conf_theme, dict) and conf_theme.get('theme') == theme:
-                    return theme
+        for conf_theme in settings.JET_THEMES:
+            if isinstance(conf_theme, dict) and conf_theme.get('theme') == theme:
+                return theme
     return settings.JET_DEFAULT_THEME
 
 

@@ -498,10 +498,7 @@ class RecentActions(DashboardModule):
                 except:
                     raise ValueError('Invalid contenttype: "%s"' % contenttype)
 
-                if qset is None:
-                    qset = current_qset
-                else:
-                    qset = qset | current_qset
+                qset = current_qset if qset is None else qset | current_qset
             return qset
 
         qs = LogEntry.objects

@@ -104,9 +104,7 @@ class Dashboard(object):
     def load_module(self, module_fullname):
         package, module_name = module_fullname.rsplit('.', 1)
         package = import_module(package)
-        module = getattr(package, module_name)
-
-        return module
+        return getattr(package, module_name)
 
     def create_initial_module_models(self, user):
         module_models = []

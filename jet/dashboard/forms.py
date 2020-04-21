@@ -18,7 +18,9 @@ class UpdateDashboardModulesForm(forms.Form):
     def clean(self):
         data = super(UpdateDashboardModulesForm, self).clean()
 
-        if not user_is_authenticated(self.request.user) or not self.request.user.is_staff:
+        if not (
+            user_is_authenticated(self.request.user) and self.request.user.is_staff
+        ):
             raise ValidationError('error')
 
         try:
@@ -69,7 +71,9 @@ class AddUserDashboardModuleForm(forms.ModelForm):
     def clean(self):
         data = super(AddUserDashboardModuleForm, self).clean()
 
-        if not user_is_authenticated(self.request.user) or not self.request.user.is_staff:
+        if not (
+            user_is_authenticated(self.request.user) and self.request.user.is_staff
+        ):
             raise ValidationError('error')
 
         if 'app_label' in data:
@@ -111,7 +115,9 @@ class UpdateDashboardModuleCollapseForm(forms.ModelForm):
     def clean(self):
         data = super(UpdateDashboardModuleCollapseForm, self).clean()
 
-        if not user_is_authenticated(self.request.user) or not self.request.user.is_staff:
+        if not (
+            user_is_authenticated(self.request.user) and self.request.user.is_staff
+        ):
             raise ValidationError('error')
 
         if self.instance.user != self.request.user.pk:
@@ -157,7 +163,9 @@ class ResetDashboardForm(forms.Form):
         data = super(ResetDashboardForm, self).clean()
         data['app_label'] = data['app_label'] if data['app_label'] else None
 
-        if not user_is_authenticated(self.request.user) or not self.request.user.is_staff:
+        if not (
+            user_is_authenticated(self.request.user) and self.request.user.is_staff
+        ):
             raise ValidationError('error')
 
         return data

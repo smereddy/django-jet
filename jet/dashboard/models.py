@@ -30,9 +30,7 @@ class UserDashboardModule(models.Model):
         try:
             package, module_name = self.module.rsplit('.', 1)
             package = import_module(package)
-            module = getattr(package, module_name)
-
-            return module
+            return getattr(package, module_name)
         except AttributeError:
             return None
         except ImportError:

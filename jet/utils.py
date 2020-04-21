@@ -200,11 +200,7 @@ def get_model_queryset(admin_site, model, request, preserved_filters=None):
     if changelist_filters:
         changelist_url += '?' + changelist_filters
 
-    if model_admin:
-        queryset = model_admin.get_queryset(request)
-    else:
-        queryset = model.objects
-
+    queryset = model_admin.get_queryset(request) if model_admin else model.objects
     list_display = model_admin.get_list_display(request)
     list_display_links = model_admin.get_list_display_links(request, list_display)
     list_filter = model_admin.get_list_filter(request)
